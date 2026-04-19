@@ -773,3 +773,14 @@ code {
     width: 100vw;
   }
 }
+
+/* ── AI Config Link ── */
+.ai-config-link {
+  color: var(--text3);
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.ai-config-link:hover {
+  color: var(--accent);
+}

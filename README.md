@@ -57,6 +57,30 @@ API_BASE=https://api.deepseek.com/v1
 MODEL=deepseek-chat
 ```
 
+### 部署 AI 后端到线上
+
+本地开发用 `npm start` 即可。要在 GitHub Pages 上也能用 AI，需要把后端部署到云平台：
+
+1. 推荐 [Render](https://render.com)（免费额度够用）：
+   - New → Web Service → 连接 GitHub 仓库
+   - Root Directory: `server`
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+   - 在 Environment 中添加 `API_KEY`、`API_BASE`、`MODEL`
+
+2. 部署完成后拿到地址（如 `https://mcq-quiz-xxx.onrender.com`）
+
+3. 编辑项目根目录的 `ai-config.json`：
+```json
+{
+  "server": "https://mcq-quiz-xxx.onrender.com"
+}
+```
+
+4. 提交推送，GitHub Pages 上的前端就会自动连接你的 AI 后端
+
+> 也可以在首页底部点「⚙️ 配置 AI 服务地址」手动设置，会保存在浏览器里。
+
 ### 常用服务商配置
 
 | 服务 | API_BASE | MODEL | 注册地址 |
