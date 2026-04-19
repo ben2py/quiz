@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCQ Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark">
+
+  <!-- ── Theme Toggle ── -->
+  <button class="theme-toggle" id="themeToggle" title="切换主题">
+    <span class="icon-sun">☀️</span>
+    <span class="icon-moon">🌙</span>
+  </button>
+
+  <!-- ── Landing / Upload Screen ── -->
+  <div class="screen" id="landingScreen">
+    <div class="landing">
+      <div class="logo">📝</div>
+      <h1>MCQ Quiz</h1>
+      <p class="landing-sub">上传 Markdown 文件，开始做题</p>
+
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-icon">📄</div>
+        <p>拖拽 <code>.md</code> 文件到这里</p>
+        <span class="drop-or">或</span>
+        <label class="btn btn-primary" for="fileInput">选择文件</label>
+        <input type="file" id="fileInput" accept=".md" hidden />
+      </div>
+
+      <div class="question-bank" id="questionBank" style="display:none;">
+        <p class="recent-title">📚 题库</p>
+        <div class="bank-list" id="bankList"></div>
+      </div>
+
+      <div class="recent-files" id="recentFiles" style="display:none;">
+        <p class="recent-title">📂 最近使用</p>
+        <div class="recent-list" id="recentList"></div>
+      </div>
+
+      <p class="format-hint">
+        支持格式：<code>**Q#.** 题目 + - A/B/C/D) 选项 + &lt;details&gt; 答案</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Quiz Screen ── -->
+  <div class="screen" id="quizScreen" style="display:none;">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <button class="btn btn-ghost" onclick="backToLanding()">← 返回</button>
+      <div class="quiz-title" id="quizTitle">Quiz</div>
+      <div class="top-right">
+        <span class="stat" id="statCorrect">✅ 0</span>
+        <span class="stat" id="statWrong">❌ 0</span>
+        <span class="stat" id="statLeft">⏳ 0</span>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-label" id="progressLabel">0/0</span>
+    </div>
+
+    <!-- Questions container -->
+    <div class="questions" id="questionsContainer"></div>
+
+    <!-- Result panel -->
+    <div class="result-panel" id="resultPanel">
+      <div class="result-emoji" id="resultEmoji">🏆</div>
+      <div class="result-score" id="resultScore">0 / 0</div>
+      <div class="result-level" id="resultLevel"></div>
+      <div class="result-sub" id="resultSub"></div>
+      <div class="result-btns">
+        <button class="btn btn-primary" onclick="retryQuiz()">🔄 重新做题</button>
+        <button class="btn btn-warn" onclick="exportWrongAnswers()">📥 导出错题</button>
+        <button class="btn btn-ghost" onclick="backToLanding()">📄 换一个文件</button>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <div class="nav-dots" id="navDots"></div>
+      <div class="bottom-actions">
+        <button class="btn btn-collect-export" id="btnCollectExport" onclick="showCollectExportDialog()" style="display:none;">⭐ 收藏 (<span id="collectCount">0</span>)</button>
+        <button class="btn btn-warn" id="btnExport" onclick="exportWrongAnswers()" style="display:none;">📥 错题</button>
+        <button class="btn btn-accent" onclick="finishQuiz()">完成测试 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Collect Export Modal ── -->
+  <div class="modal-overlay" id="collectModal">
+    <div class="modal-box">
+      <div class="modal-title">⭐ 导出收藏题目</div>
+      <p class="modal-desc">已收藏 <span id="collectModalCount">0</span> 题，指定文件名后导出为 Markdown 文件，可重新加载做题。</p>
+      <div class="modal-field">
+        <label for="collectFileName">文件名</label>
+        <input type="text" id="collectFileName" placeholder="例如：重点复习题.md" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeCollectModal()">取消</button>
+        <button class="btn btn-primary" onclick="doCollectExport()">📥 导出</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="parser.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

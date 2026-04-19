@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operating Systems — 20 MCQ Practice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2230;
+      --border: #30363d;
+      --accent: #7c5cfc;
+      --accent-glow: rgba(124,92,252,0.3);
+      --accent2: #56cfab;
+      --danger: #f85149;
+      --success: #3fb950;
+      --warning: #e3b341;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #484f58;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 80px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 48px 16px 36px;
+      position: relative;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse at center, rgba(124,92,252,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(124,92,252,0.15);
+      border: 1px solid rgba(124,92,252,0.4);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(24px, 5vw, 40px);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── Progress Bar ── */
+    .progress-wrap {
+      max-width: 800px;
+      margin: 0 auto 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    }
+    .progress-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    /* ── Scorecard ── */
+    .scorecard {
+      max-width: 800px;
+      margin: 0 auto 28px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .score-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .score-num {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .score-num.correct { color: var(--success); }
+    .score-num.wrong { color: var(--danger); }
+    .score-num.skipped { color: var(--warning); }
+    .score-num.pct { 
+      color: var(--accent);
+      font-size: 22px;
+    }
+    .score-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Part Divider ── */
+    .part-divider {
+      max-width: 800px;
+      margin: 10px auto 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .part-divider::before, .part-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .part-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── Card ── */
+    .card {
+      max-width: 800px;
+      margin: 0 auto 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .card.answered-correct { border-color: var(--success); }
+    .card.answered-wrong { border-color: var(--danger); }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .q-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), #5a3fc0);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .q-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      flex: 1;
+    }
+    .q-text code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: var(--accent2);
+    }
+
+    /* ── Options ── */
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 13px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      position: relative;
+    }
+    .opt:hover:not(.disabled) {
+      border-color: var(--accent);
+      background: rgba(124,92,252,0.08);
+      transform: translateX(3px);
+    }
+    .opt.selected:not(.disabled) {
+      border-color: var(--accent);
+      background: rgba(124,92,252,0.12);
+    }
+    .opt.correct {
+      border-color: var(--success);
+      background: rgba(63,185,80,0.08);
+    }
+    .opt.wrong {
+      border-color: var(--danger);
+      background: rgba(248,81,73,0.08);
+    }
+    .opt.disabled { cursor: default; }
+
+    .opt-letter {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .opt.selected .opt-letter { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .opt.correct .opt-letter { background: var(--success); border-color: var(--success); color: #fff; }
+    .opt.wrong .opt-letter { background: var(--danger); border-color: var(--danger); color: #fff; }
+
+    .opt-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      flex: 1;
+    }
+    .opt-text code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--accent2);
+    }
+    .opt-icon {
+      flex-shrink: 0;
+      font-size: 16px;
+      margin-top: 3px;
+    }
+
+    /* ── Explanation ── */
+    .explanation {
+      display: none;
+      margin-top: 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      animation: slideIn 0.3s ease;
+    }
+    .explanation.show { display: block; }
+    .explanation strong { color: var(--text); }
+    .explanation code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: var(--accent2);
+    }
+    .explanation .exp-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Submit button ── */
+    .btn-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--accent), #5a3fc0);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+    .btn-submit:disabled {
+      opacity: 0.5; cursor: default;
+      box-shadow: none;
+    }
+
+    /* ── Final result ── */
+    .result-panel {
+      max-width: 800px;
+      margin: 0 auto 40px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .result-panel.show { display: flex; }
+    .result-emoji { font-size: 56px; }
+    .result-score {
+      font-size: 52px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .result-level {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .result-sub { color: var(--text-muted); font-size: 14px; }
+    .btn-retry {
+      background: linear-gradient(135deg, var(--accent), #5a3fc0);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 12px 32px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s;
+    }
+    .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 8px 22px var(--accent-glow); }
+
+    /* ── Code block (Q20 memory layout) ── */
+    .mem-layout {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      color: var(--accent2);
+      white-space: pre;
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    /* ── Sticky footer nav ── */
+    .sticky-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 100;
+    }
+    .nav-dots {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      max-width: 70%;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .dot.answered-correct { background: var(--success); border-color: var(--success); }
+    .dot.answered-wrong { background: var(--danger); border-color: var(--danger); }
+    .dot.unanswered { background: var(--surface2); }
+    .btn-finish {
+      background: linear-gradient(135deg, var(--accent2), #3a9e80);
+      color: #0d1117;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-finish:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+    @media (max-width: 600px) {
+      .scorecard { grid-template-columns: repeat(2, 1fr); }
+      .card { padding: 18px; }
+      .sticky-nav { padding: 8px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">📖 Operating Systems</div>
+  <h1>MCQ Practice — 20 Questions</h1>
+  <p class="subtitle">
+    <span class="pill">Limited Direct Execution</span>
+    <span class="pill">Address Spaces</span>
+    <span class="pill">Base &amp; Bounds</span>
+  </p>
+</header>
+
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 / 20</div>
+</div>
+
+<!-- Scorecard -->
+<div class="scorecard">
+  <div class="score-item">
+    <div class="score-num correct" id="numCorrect">0</div>
+    <div class="score-lbl">✅ Correct</div>
+  </div>
+  <div class="score-item">
+    <div class="score-num wrong" id="numWrong">0</div>
+    <div class="score-lbl">❌ Wrong</div>
+  </div>
+  <div class="score-item">
+    <div class="score-num skipped" id="numLeft">20</div>
+    <div class="score-lbl">⏳ Remaining</div>
+  </div>
+  <div class="score-item">
+    <div class="score-num pct" id="numPct">—</div>
+    <div class="score-lbl">🎯 Accuracy</div>
+  </div>
+</div>
+
+<!-- Questions will be injected here -->
+<div id="quiz"></div>
+
+<!-- Final Result -->
+<div class="result-panel" id="resultPanel">
+  <div class="result-emoji" id="resultEmoji">🏆</div>
+  <div class="result-score" id="resultScore">20 / 20</div>
+  <div class="result-level" id="resultLevel">Excellent</div>
+  <div class="result-sub" id="resultSub">Thorough understanding of all three topics.</div>
+  <button class="btn-retry" onclick="retryQuiz()">🔄 再来一遍</button>
+</div>
+
+<!-- Sticky nav bar -->
+<div class="sticky-nav">
+  <div class="nav-dots" id="navDots"></div>
+  <button class="btn-finish" onclick="finishQuiz()">完成测试 →</button>
+</div>
+
+<script>
+const questions = [
+  {
+    part: "Part 1: Theory",
+    q: "Q1. What does \"Limited Direct Execution\" achieve by combining \"Direct\" and \"Limited\"?",
+    opts: [
+      "Direct = run in an emulator for safety; Limited = restrict network access",
+      "Direct = run the program directly on the CPU for speed; Limited = restrict privileges via hardware mechanisms like user/kernel mode",
+      "Direct = give the program full kernel access; Limited = limit how much memory it can use",
+      "Direct = interpret the program line by line; Limited = limit the number of system calls"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> \"Direct Execution\" means the program runs natively on the CPU at full speed — no emulator or interpreter. \"Limited\" means hardware mechanisms (mode bit, trap instructions, trap table) restrict what the program can do, ensuring the OS retains control. This gives us both <strong>performance</strong> and <strong>safety</strong>."
+  },
+  {
+    q: "Q2. When the trap instruction executes, which of the following correctly describes what happens?",
+    opts: [
+      "User registers are saved to the user stack → mode switches to kernel → CPU jumps to an address chosen by the user program",
+      "User registers are saved to the kernel stack → mode switches to kernel → CPU jumps to a pre-defined address from the trap table",
+      "All registers are cleared → mode switches to kernel → OS restarts from its main function",
+      "User registers are saved to the kernel stack → mode stays in user → CPU jumps to the trap table"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> The trap instruction atomically: (1) saves current state (PC, registers, flags) onto the <strong>kernel stack</strong> (not user stack), (2) changes the mode bit from user to kernel, and (3) jumps to a <strong>pre-defined</strong> handler address from the trap table. The user program cannot choose where to jump — that would be a security disaster."
+  },
+  {
+    q: "Q3. Why do system calls use numbers (e.g., <code>read</code> = 0, <code>write</code> = 1) instead of letting user programs specify a kernel address to jump to?",
+    opts: [
+      "Because kernel addresses are too long to fit in a register",
+      "Because using numbers is faster than using addresses",
+      "Because it provides protection through indirection — the user cannot jump to arbitrary kernel code",
+      "Because the kernel doesn't have fixed addresses"
+    ],
+    answer: 2,
+    explanation: "<strong>C.</strong> System call numbers provide <strong>protection through indirection</strong>. The user can only specify <em>which</em> service it wants (by number); the OS looks up the corresponding handler. If user programs could specify arbitrary kernel addresses, they could skip permission checks and execute any kernel code, taking over the system."
+  },
+  {
+    q: "Q4. Which of the following is <strong>NOT</strong> one of the three goals of memory virtualization?",
+    opts: [
+      "Transparency — the process doesn't know it's using virtual addresses",
+      "Efficiency — address translation must be fast",
+      "Persistence — the address space survives after the process exits",
+      "Protection — processes are isolated from each other"
+    ],
+    answer: 2,
+    explanation: "<strong>C.</strong> The three goals are <strong>Transparency</strong>, <strong>Efficiency</strong>, and <strong>Protection</strong>. Persistence is a goal of the <em>file system</em>, not memory virtualization. When a process exits, its address space is reclaimed by the OS."
+  },
+  {
+    q: "Q5. What was the main problem with early 1950s computers that drove the development of multiprogramming?",
+    opts: [
+      "Programs were too large to fit in memory",
+      "The CPU sat idle during I/O, wasting extremely expensive hardware",
+      "There was no operating system at all",
+      "Users needed graphical interfaces"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> Machines cost hundreds of thousands of dollars, yet the CPU sat idle whenever a program waited for I/O. Multiprogramming solved this by keeping multiple programs in memory so the CPU could switch to another program during I/O waits, dramatically improving utilization."
+  },
+  {
+    q: "Q6. In the base and bounds mechanism, what is the correct translation formula?",
+    opts: [
+      "<code>physical = virtual - BASE</code> (if virtual &lt; BOUNDS)",
+      "<code>physical = virtual + BOUNDS</code> (if virtual &lt; BASE)",
+      "<code>physical = virtual + BASE</code> (if virtual &lt; BOUNDS)",
+      "<code>physical = BOUNDS - virtual + BASE</code>"
+    ],
+    answer: 2,
+    explanation: "<strong>C.</strong> The hardware computes <code>physical = virtual + BASE</code> after verifying that <code>virtual &lt; BOUNDS</code>. BASE stores the starting physical address of the process; BOUNDS stores the size of the address space and is used for protection."
+  },
+  {
+    q: "Q7. Why must instructions that modify the base and bounds registers be privileged?",
+    opts: [
+      "Because these registers are physically fragile and wear out with use",
+      "Because if a user program could modify BASE to 0, it could directly access OS memory and break all protection",
+      "Because only one process can use base and bounds at a time",
+      "Because the base and bounds registers are stored on disk"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> If user programs could modify base/bounds, a malicious program could set <code>BASE = 0</code> to map its virtual addresses onto the OS's physical memory, reading kernel secrets or overwriting OS code. Only the OS (in kernel mode) is allowed to modify these registers."
+  },
+  {
+    q: "Q8. During a context switch from Process A to Process B, what must the OS do with the base and bounds registers?",
+    opts: [
+      "Nothing — base and bounds are shared between all processes",
+      "Clear them to zero and let Process B set them itself",
+      "Save A's base/bounds to A's PCB, then restore B's base/bounds from B's PCB",
+      "Copy A's base/bounds into B's PCB so both processes use the same mapping"
+    ],
+    answer: 2,
+    explanation: "<strong>C.</strong> Each process has different base/bounds values corresponding to its location in physical memory. The OS saves the current values into the outgoing process's PCB and restores the incoming process's values. Without this, Process B's virtual addresses would be translated using A's mapping — accessing completely wrong memory."
+  },
+  {
+    q: "Q9. What is \"internal fragmentation\" in the context of base and bounds?",
+    opts: [
+      "The OS wastes memory by keeping too many free list entries",
+      "The space between the heap and stack within a process's address space is allocated in physical memory but unused",
+      "Physical memory becomes fragmented into many small free blocks",
+      "The base register wastes bits because addresses are too small"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> Base and bounds requires the entire address space to be contiguous in physical memory. If a 16KB address space only uses 2KB (1KB code + 1KB stack), the 14KB between heap and stack is allocated but wasted. This led to <strong>segmentation</strong>, which uses separate base/bounds for each segment so unused space doesn't need to be allocated."
+  },
+  {
+    q: "Q10. Which of the following is an advantage of <strong>dynamic</strong> relocation (base and bounds) over <strong>static</strong> relocation (software-based address rewriting at load time)?",
+    opts: [
+      "Dynamic relocation doesn't require any hardware support",
+      "Dynamic relocation is done at compile time, making it faster",
+      "Dynamic relocation provides protection through bounds checking AND allows the OS to move a process at runtime",
+      "Dynamic relocation eliminates internal fragmentation"
+    ],
+    answer: 2,
+    explanation: "<strong>C.</strong> Dynamic relocation happens at runtime via hardware, providing bounds-checked protection on every memory access. It also allows the OS to move a process (stop it, copy memory, update BASE, resume) without the process knowing. Static relocation offers no protection and cannot move processes after loading. However, dynamic relocation does NOT eliminate internal fragmentation — that requires segmentation."
+  },
+  {
+    part: "Part 2: Practical / Simulation",
+    q: "Q11. A process has <code>BASE = 32KB (32768)</code> and <code>BOUNDS = 16KB (16384)</code>. The process accesses virtual address <code>128</code>. What is the physical address?",
+    opts: ["128", "32640", "32896", "48KB"],
+    answer: 2,
+    explanation: "<strong>C.</strong> Bounds check: 128 &lt; 16384 ✓. Translation: <code>physical = 128 + 32768 = 32896</code>. The process thinks it's accessing address 128 (an instruction in its code section), but the hardware actually accesses physical address 32896."
+  },
+  {
+    q: "Q12. A process has <code>BASE = 32KB</code> and <code>BOUNDS = 16KB</code>. The process tries to access virtual address <code>20KB</code>. What happens?",
+    opts: [
+      "Physical address = 52KB, access succeeds",
+      "Hardware raises an exception (out of bounds), OS terminates the process",
+      "The OS automatically extends the address space to 20KB",
+      "The access is silently ignored"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> Bounds check: 20KB ≥ 16KB → <strong>FAULT!</strong> The hardware raises an exception, the CPU switches to kernel mode, and the OS exception handler runs — typically terminating the offending process. This is how base and bounds provides protection. (This is the origin of \"Segmentation Fault.\")"
+  },
+  {
+    q: "Q13. MMU has <code>BASE = 20KB</code> and <code>BOUNDS = 8KB</code>. Which of the following virtual addresses is <strong>valid</strong>?",
+    opts: ["8KB", "10KB", "4KB", "20KB"],
+    answer: 2,
+    explanation: "<strong>C.</strong> The valid range is <code>0 ≤ virtual &lt; BOUNDS</code>, i.e., <code>0 ≤ virtual &lt; 8KB</code>.<br>• 4KB: 4KB &lt; 8KB ✓ → physical = 4KB + 20KB = 24KB ✅<br>• 8KB: 8KB &lt; 8KB? No → FAULT ❌ (strictly less than)<br>• 10KB: 10KB &lt; 8KB? No → FAULT ❌<br>• 20KB: 20KB &lt; 8KB? No → FAULT ❌"
+  },
+  {
+    q: "Q14. Two processes: Process A (<code>BASE=16KB, BOUNDS=4KB</code>) and Process B (<code>BASE=48KB, BOUNDS=8KB</code>). Both access virtual address <code>2KB</code>. What are their physical addresses?",
+    opts: [
+      "Both map to 2KB",
+      "A → 18KB, B → 50KB",
+      "A → 14KB, B → 46KB",
+      "A → 18KB, B → 18KB"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> Each process has a different BASE, so the same virtual address maps to different physical locations:<br>• Process A: 2KB + 16KB = <strong>18KB</strong><br>• Process B: 2KB + 48KB = <strong>50KB</strong><br>This is the essence of memory virtualization — every process thinks it starts at address 0, but the hardware maps each to a different physical location, providing isolation."
+  },
+  {
+    q: "Q15. A process executes <code>y = y + 5;</code> which compiles to three instructions: <code>load y</code>, <code>add 5</code>, <code>store y</code>. How many <strong>address translations</strong> does the hardware perform?",
+    opts: ["3", "4", "5", "6"],
+    answer: 2,
+    explanation: "<strong>C.</strong> Five translations:<br>1. <strong>Fetch</strong> the <code>load</code> instruction → 1 translation<br>2. <strong>Execute</strong> the load (read y from memory) → 1 translation<br>3. <strong>Fetch</strong> the <code>add</code> instruction → 1 translation<br>4. Execute the add → <em>no memory access</em> (register-only operation)<br>5. <strong>Fetch</strong> the <code>store</code> instruction → 1 translation<br>6. <strong>Execute</strong> the store (write y to memory) → 1 translation<br>Total: 5. The <code>add</code> executes entirely in registers with no memory access."
+  },
+  {
+    q: "Q16. Physical memory has no protection. Process A (at 64KB–128KB) executes <code>char *p = (char*)200000; *p = 'X';</code>. Process B is at 192KB–256KB. What happens?",
+    opts: [
+      "The program crashes with a segmentation fault",
+      "The write succeeds and overwrites Process B's data at physical address 200000",
+      "The OS intercepts the write and blocks it",
+      "The hardware redirects the write to Process A's own memory"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> Without memory protection, Process A directly accesses physical address 200000 (≈195KB), which falls inside Process B's region (192KB–256KB). The write succeeds and silently corrupts B's data. Process B may crash later or behave incorrectly. This demonstrates exactly why hardware-enforced memory protection is essential."
+  },
+  {
+    q: "Q17. A malicious user-mode program attempts: (1) execute an <code>IN</code> instruction to read from a disk I/O port, (2) modify the mode bit from user to kernel directly, (3) call <code>read()</code> via a system call. Which operations succeed?",
+    opts: [
+      "All three succeed",
+      "Only (3) succeeds",
+      "(1) and (3) succeed",
+      "None succeed"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> Only the system call succeeds:<br>1. <code>IN</code> is a privileged instruction → hardware detects user mode → <strong>exception</strong> → process terminated ❌<br>2. The mode bit cannot be changed directly by any user instruction → <strong>fails</strong> ❌<br>3. <code>read()</code> uses the SYSCALL/trap instruction, which is the legitimate mechanism for requesting OS services → <strong>succeeds</strong> ✅<br>LDE ensures the only way for user programs to perform privileged operations is through system calls."
+  },
+  {
+    q: "Q18. The OS decides to move Process P from physical address 32KB to 64KB. Process P has <code>BOUNDS = 8KB</code>. What must the OS do?",
+    opts: [
+      "Notify Process P to update all its pointers, then change BASE",
+      "Stop P → copy 8KB from physical 32KB to 64KB → update BASE to 64KB → resume P",
+      "Recompile P with a new starting address",
+      "Change BOUNDS from 8KB to 64KB"
+    ],
+    answer: 1,
+    explanation: "<strong>B.</strong> The OS: (1) stops the process, (2) copies the 8KB of data from physical 32KB to 64KB, (3) updates the BASE register to 64KB, and (4) resumes the process. Process P is completely unaware it moved because its <em>virtual</em> addresses haven't changed — only the BASE (translation offset) changed. This is why it's called <strong>dynamic</strong> relocation. No recompilation or pointer updates are needed."
+  },
+  {
+    q: "Q19. Which of the following actions happens at <strong>boot time</strong> rather than at run time?",
+    opts: [
+      "The OS allocates memory for a new process from the free list",
+      "The OS saves/restores base/bounds during a context switch",
+      "The OS initializes the trap table and tells hardware where the handlers are",
+      "The hardware performs bounds checking on a memory access"
+    ],
+    answer: 2,
+    explanation: "<strong>C.</strong> The trap table is initialized <strong>once at boot time</strong>, before any user program runs. This is a privileged operation — only the kernel can set it up. After boot, the trap table cannot be modified by user code.<br>Options A, B, and D all happen repeatedly at run time: A happens when processes are created, B happens on every context switch, and D happens on every single memory access."
+  },
+  {
+    q: "Q20. See the memory layout below. The OS creates Process B (size 8KB) at physical address 16KB (BASE=16KB, BOUNDS=8KB). Process A accesses virtual address 10KB; Process B accesses virtual address 10KB. Which statement is correct?",
+    layout: ` 0KB  ┌──────────────┐
+      │  OS          │
+16KB  ├──────────────┤
+      │  Process B   │  BASE=16KB, BOUNDS=8KB
+24KB  ├──────────────┤
+      │  (free)      │
+32KB  ├──────────────┤
+      │  Process A   │  BASE=32KB, BOUNDS=16KB
+48KB  ├──────────────┤
+      │  (free)      │
+64KB  └──────────────┘`,
+    opts: [
+      "Both accesses succeed: A → physical 42KB, B → physical 26KB",
+      "Both accesses succeed: A → physical 42KB, B → physical 42KB",
+      "A succeeds (→ 42KB) but B faults because 10KB ≥ 8KB (BOUNDS)",
+      "Both accesses fault"
+    ],
+    answer: 2,
+    explanation: "<strong>C.</strong><br>• Process A: <code>BASE=32KB, BOUNDS=16KB</code>. Virtual 10KB &lt; 16KB ✓ → physical = 10KB + 32KB = <strong>42KB</strong>. Access succeeds.<br>• Process B: <code>BASE=16KB, BOUNDS=8KB</code>. Virtual 10KB &lt; 8KB? <strong>No</strong> → <strong>FAULT!</strong> Hardware raises an out-of-bounds exception. The OS terminates Process B.<br>The same virtual address (10KB) has completely different outcomes because they have different BOUNDS values."
+  }
+];
+
+let state = questions.map(() => ({ selected: null, confirmed: false }));
+
+function buildQuiz() {
+  const container = document.getElementById('quiz');
+  container.innerHTML = '';
+  const dotsContainer = document.getElementById('navDots');
+  dotsContainer.innerHTML = '';
+
+  questions.forEach((q, i) => {
+    // Part divider
+    if (q.part) {
+      const div = document.createElement('div');
+      div.className = 'part-divider';
+      div.innerHTML = `<span class="part-title">${q.part}</span>`;
+      container.appendChild(div);
+    }
+
+    // Card
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${i}`;
+
+    let layoutHtml = q.layout ? `<div class="mem-layout">${q.layout}</div>` : '';
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${i+1}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      ${layoutHtml}
+      <div class="options" id="opts-${i}">
+        ${q.opts.map((o, j) => `
+          <div class="opt" id="opt-${i}-${j}" onclick="selectOpt(${i}, ${j})">
+            <div class="opt-letter">${['A','B','C','D'][j]}</div>
+            <div class="opt-text">${o}</div>
+            <div class="opt-icon" id="icon-${i}-${j}"></div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="btn-wrap">
+        <button class="btn-submit" id="btn-${i}" onclick="submitAnswer(${i})" disabled>提交答案</button>
+      </div>
+      <div class="explanation" id="exp-${i}">
+        <div class="exp-label">💡 解析</div>
+        ${q.explanation}
+      </div>
+    `;
+    container.appendChild(card);
+
+    // Nav dot
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.id = `dot-${i}`;
+    dot.title = `Q${i+1}`;
+    dot.onclick = () => document.getElementById(`card-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    dotsContainer.appendChild(dot);
+  });
+
+  updateScorecard();
+}
+
+function selectOpt(qi, oi) {
+  if (state[qi].confirmed) return;
+  state[qi].selected = oi;
+
+  for (let j = 0; j < 4; j++) {
+    const el = document.getElementById(`opt-${qi}-${j}`);
+    if (!el) continue;
+    el.classList.remove('selected');
+  }
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+  document.getElementById(`btn-${qi}`).disabled = false;
+}
+
+function submitAnswer(qi) {
+  if (state[qi].confirmed || state[qi].selected === null) return;
+  state[qi].confirmed = true;
+
+  const correct = questions[qi].answer;
+  const selected = state[qi].selected;
+  const isCorrect = selected === correct;
+
+  const card = document.getElementById(`card-${qi}`);
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+  for (let j = 0; j < 4; j++) {
+    const el = document.getElementById(`opt-${qi}-${j}`);
+    const icon = document.getElementById(`icon-${qi}-${j}`);
+    if (!el) continue;
+    el.classList.add('disabled');
+    el.classList.remove('selected');
+    if (j === correct) {
+      el.classList.add('correct');
+      icon.textContent = '✅';
+    } else if (j === selected && !isCorrect) {
+      el.classList.add('wrong');
+      icon.textContent = '❌';
+    }
+  }
+
+  document.getElementById(`exp-${qi}`).classList.add('show');
+  document.getElementById(`btn-${qi}`).disabled = true;
+
+  const dot = document.getElementById(`dot-${qi}`);
+  dot.classList.remove('unanswered');
+  dot.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+  updateScorecard();
+}
+
+function updateScorecard() {
+  let correct = 0, wrong = 0, answered = 0;
+  state.forEach(s => {
+    if (s.confirmed) {
+      answered++;
+      const qi = state.indexOf(s);
+      if (s.selected === questions[qi].answer) correct++;
+      else wrong++;
+    }
+  });
+  const left = 20 - answered;
+  document.getElementById('numCorrect').textContent = correct;
+  document.getElementById('numWrong').textContent = wrong;
+  document.getElementById('numLeft').textContent = left;
+  document.getElementById('numPct').textContent = answered > 0 ? Math.round(correct/answered*100) + '%' : '—';
+  
+  const pct = answered / 20 * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${answered} / 20`;
+}
+
+function finishQuiz() {
+  // Confirm all remaining should be submitted
+  let unanswered = state.filter(s => !s.confirmed).length;
+  if (unanswered > 0) {
+    const go = confirm(`还有 ${unanswered} 题未作答，确定提交吗？`);
+    if (!go) return;
+  }
+  showResult();
+}
+
+function showResult() {
+  let correct = 0;
+  state.forEach((s, i) => {
+    if (s.confirmed && s.selected === questions[i].answer) correct++;
+  });
+
+  const panel = document.getElementById('resultPanel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth' });
+
+  document.getElementById('resultScore').textContent = `${correct} / 20`;
+
+  let emoji, level, sub;
+  if (correct >= 18) {
+    emoji = '🏆'; level = 'Excellent！'; sub = '对 LDE、地址空间、地址转换的理解非常扎实！';
+  } else if (correct >= 14) {
+    emoji = '👍'; level = 'Good！'; sub = '表现不错，回顾一下答错的题目吧。';
+  } else if (correct >= 10) {
+    emoji = '📖'; level = 'Needs Work'; sub = '建议重新阅读材料，并手动推导几个例子。';
+  } else {
+    emoji = '🆘'; level = '需要加强'; sub = '建议逐步深入理解每个概念，多练习！';
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultLevel').textContent = level;
+  document.getElementById('resultSub').textContent = sub;
+}
+
+function retryQuiz() {
+  state = questions.map(() => ({ selected: null, confirmed: false }));
+  document.getElementById('resultPanel').classList.remove('show');
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
