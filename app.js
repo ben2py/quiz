@@ -296,6 +296,7 @@ function renderQuestions() {
       <div class="explanation" id="exp-${i}">
         <div class="exp-tag">💡 解析</div>
         <div>${mdToHtml(q.explanation)}</div>
+        <button class="btn btn-ai" onclick="openAiChat(${i})">🤖 AI 辅导</button>
       </div>
     `;
     container.appendChild(card);
@@ -651,7 +652,11 @@ function exportWrongAnswers() {
 
 // ═══════ Modal keyboard ═══════
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeCollectModal();
+  if (e.key === 'Escape') {
+    closeCollectModal();
+    if (typeof closeAiChat === 'function') closeAiChat();
+    if (typeof closeAnalysis === 'function') closeAnalysis();
+  }
 });
 
 // ═══════ Mobile Swipe Navigation ═══════

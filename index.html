@@ -77,6 +77,7 @@
       <div class="result-sub" id="resultSub"></div>
       <div class="result-btns">
         <button class="btn btn-primary" onclick="retryQuiz()">🔄 重新做题</button>
+        <button class="btn btn-ai-analysis" onclick="requestAnalysis()">🤖 AI 错题分析</button>
         <button class="btn btn-warn" onclick="exportWrongAnswers()">📥 导出错题</button>
         <button class="btn btn-ghost" onclick="backToLanding()">📄 换一个文件</button>
       </div>
@@ -109,7 +110,32 @@
     </div>
   </div>
 
+  <!-- ── AI Chat Panel ── -->
+  <div class="ai-panel" id="aiChatPanel">
+    <div class="ai-panel-header">
+      <span>🤖 AI 辅导</span>
+      <button class="btn btn-ghost ai-close" onclick="closeAiChat()">✕</button>
+    </div>
+    <div class="ai-chat-messages" id="aiChatMessages"></div>
+    <div class="ai-chat-input-wrap">
+      <input type="text" id="aiChatInput" placeholder="继续提问…" onkeydown="handleAiInput(event)" />
+      <button class="btn btn-primary" onclick="sendUserMessage()">发送</button>
+    </div>
+  </div>
+
+  <!-- ── AI Analysis Panel ── -->
+  <div class="modal-overlay" id="aiAnalysisPanel">
+    <div class="modal-box modal-wide">
+      <div class="modal-title">🤖 AI 错题分析</div>
+      <div class="analysis-body" id="analysisContent"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeAnalysis()">关闭</button>
+      </div>
+    </div>
+  </div>
+
   <script src="parser.js"></script>
   <script src="app.js"></script>
+  <script src="ai.js"></script>
 </body>
 </html>
